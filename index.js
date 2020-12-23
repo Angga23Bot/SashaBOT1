@@ -4,7 +4,7 @@ const left = require('./lib/left')
 const cron = require('node-cron')
 const color = require('./lib/color')
 const fs = require('fs')
-// const msgHndlr = require ('./tobz')
+// const msgHndlr = require ('./angga23')
 const figlet = require('figlet')
 const options = require('./options')
 //const fs = require('fs-extra')
@@ -16,8 +16,8 @@ const {
 // AUTO UPDATE BY NURUTOMO
 // THX FOR NURUTOMO
 // Cache handler and check for file change
-require('./tobz.js')
-nocache('./tobz.js', module => console.log(`'${module}' Updated!`))
+require('./angga23.js')
+nocache('./angga23.js', module => console.log(`'${module}' Updated!`))
 
 const adminNumber = JSON.parse(fs.readFileSync('./lib/database/admin.json'))
 const setting = JSON.parse(fs.readFileSync('./lib/database/setting.json'))
@@ -32,84 +32,84 @@ let {
     restartState: isRestart
     } = setting
 
-function restartAwal(tobz){
+function restartAwal(angga23){
     setting.restartState = false
     isRestart = false
-    tobz.sendText(setting.restartId, 'Restart Succesfull!')
+    angga23.sendText(setting.restartId, 'Restart Succesfull!')
     setting.restartId = 'undefined'
     fs.writeFileSync('./lib/setting.json', JSON.stringify(setting, null,2));
 }
 
-const start = async (tobz = new Client()) => {
+const start = async (angga23 = new Client()) => {
         console.log('------------------------------------------------')
         console.log(color(figlet.textSync('Sasha BOT', { horizontalLayout: 'full' })))
         console.log('------------------------------------------------')
         console.log('[DEV] ANGGA.VOLDIGOAD')
         console.log('[SERVER] Sasha IS ONLINE!')
-        tobz.onAnyMessage((fn) => messageLog(fn.fromMe, fn.type))
+        //angga23.onAnyMessage((fn) => messageLog(fn.fromMe, fn.type))
         // Force it to keep the current session
-        tobz.onStateChanged((state) => {
+        angga23.onStateChanged((state) => {
             console.log('[Client State]', state)
-            if (state === 'CONFLICT' || state === 'UNLAUNCHED') tobz.forceRefocus()
+            if (state === 'CONFLICT' || state === 'UNLAUNCHED') angga23.forceRefocus()
         })
         // listening on message
-        tobz.onMessage((async (message) => {
+        angga23.onAnyMessage((async (message) => {
 
-        tobz.getAmountOfLoadedMessages() // Cut message Cache if cache more than 3K
+        angga23.getAmountOfLoadedMessages() // Cut message Cache if cache more than 3K
             .then((msg) => {
                 if (msg >= 1000) {
                     console.log('[CLIENT]', color(`Loaded Message Reach ${msg}, cuting message cache...`, 'yellow'))
-                    tobz.cutMsgCache()
+                    angga23.cutMsgCache()
                 }
             })
-        // msgHndlr(tobz, message)
+        // msgHndlr(angga23, message)
         // Message Handler (Loaded from recent cache)
-        require('./tobz.js')(tobz, message)
+        require('./angga23.js')(angga23, message)
     }))
            
 
-        tobz.onGlobalParicipantsChanged((async (heuh) => {
-            await welcome(tobz, heuh) 
-            left(tobz, heuh)
+        angga23.onGlobalParicipantsChanged((async (heuh) => {
+            await welcome(angga23, heuh) 
+            left(angga23, heuh)
             }))
         
-        tobz.onAddedToGroup(async (chat) => {
-            if(isWhite(chat.id)) return tobz.sendText(chat.id, `Halo aku Sasha, Ketik ${prefix}help Untuk Melihat List Command Ku...`)
+        angga23.onAddedToGroup(async (chat) => {
+            if(isWhite(chat.id)) return angga23.sendText(chat.id, `Halo aku Sasha, Ketik ${prefix}help Untuk Melihat List Command Ku...`)
             if(mtcState === false){
-                const groups = await tobz.getAllGroups()
+                const groups = await angga23.getAllGroups()
                 // BOT group count less than
                 if(groups.length > groupLimit){
-                    await tobz.sendText(chat.id, 'Maaf, Batas group yang dapat Sasha tampung sudah penuh').then(async () =>{
-                        tobz.deleteChat(chat.id)
-                        tobz.leaveGroup(chat.id)
+                    await angga23.sendText(chat.id, 'Maaf, Batas group yang dapat Sasha tampung sudah penuh').then(async () =>{
+                        angga23.deleteChat(chat.id)
+                        angga23.leaveGroup(chat.id)
                     })
                 }else{
                     if(chat.groupMetadata.participants.length < memberLimit){
-                        await tobz.sendText(chat.id, `Maaf, BOT keluar jika member group tidak melebihi ${memberLimit} orang`).then(async () =>{
-                            tobz.deleteChat(chat.id)
-                            tobz.leaveGroup(chat.id)
+                        await angga23.sendText(chat.id, `Maaf, BOT keluar jika member group tidak melebihi ${memberLimit} orang`).then(async () =>{
+                            angga23.deleteChat(chat.id)
+                            angga23.leaveGroup(chat.id)
                         })
                     }else{
-                        if(!chat.isReadOnly) tobz.sendText(chat.id, `Halo aku Sasha, Ketik ${prefix}help Untuk Melihat List Command Ku...`)
+                        if(!chat.isReadOnly) angga23.sendText(chat.id, `Halo aku Sasha, Ketik ${prefix}help Untuk Melihat List Command Ku...`)
                     }
                 }
             }else{
-                await tobz.sendText(chat.id, 'Sasha sedang maintenance, coba lain hari').then(async () => {
-                    tobz.deleteChat(chat.id)
-                    tobz.leaveGroup(chat.id)
+                await angga23.sendText(chat.id, 'Sasha sedang maintenance, coba lain hari').then(async () => {
+                    angga23.deleteChat(chat.id)
+                    angga23.leaveGroup(chat.id)
                 })
             }
         })
 
-        /*tobz.onAck((x => {
+        /*angga23.onAck((x => {
             const { from, to, ack } = x
-            if (x !== 3) tobz.sendSeen(to)
+            if (x !== 3) angga23.sendSeen(to)
         }))*/
 
         // listening on Incoming Call
-        tobz.onIncomingCall(( async (call) => {
-            await tobz.sendText(call.peerJid, 'Maaf, saya tidak bisa menerima panggilan. nelfon = block!.\nJika ingin membuka block harap chat Owner!')
-            .then(() => tobz.contactBlock(call.peerJid))
+        angga23.onIncomingCall(( async (call) => {
+            await angga23.sendText(call.peerJid, 'Maaf, saya tidak bisa menerima panggilan. nelfon = block!.\nJika ingin membuka block harap chat Owner!')
+            .then(() => angga23.contactBlock(call.peerJid))
         }))
     }
 
@@ -142,5 +142,5 @@ function uncache(module = '.') {
 }
 
 create(options(true, start))
-    .then(tobz => start(tobz))
+    .then(angga23 => start(angga23))
     .catch((error) => console.log(error))
