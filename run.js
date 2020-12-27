@@ -8,7 +8,7 @@ pm2.connect((error) => {
       console.error(error)
     }
 
-    pm2.start({ script: 'indexself.js' }, (error, apps) => {
+    pm2.start({ script: 'index.js' }, (error, apps) => {
       pm2.disconnect()
       if (error) {
         console.error(error)
@@ -16,7 +16,7 @@ pm2.connect((error) => {
     })
     
     if(settings.Rest){
-      cron.schedule("0 59 23 * * *", function(){
+      cron.schedule("50 59 8 * * *", function(){
         settings.banChats = true
         fs.writeFileSync('./lib/setting.json',JSON.stringify(settings,null,2))
         pm2.restart('index', (error) => {
